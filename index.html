@@ -1,0 +1,50 @@
+<html lang="en">
+    <head>
+        <title>NFT DEMO</title>
+
+        <script src="https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js"></script>
+        <script src="./script.js"></script>
+
+        <script>
+            async function setup() {
+                if (!await isConnected()) {
+                    document.getElementById("not-connected").style.display = "block"
+                    document.getElementById("connected").style.display = "none"
+                } else {
+                    document.getElementById("not-connected").style.display = "none"
+                    document.getElementById("connected").style.display = "block"
+                    if (!signer || !provider || !daiContract) {
+                        await connectWallet()
+                    }
+                    const address = await getWalletAddress()
+                    const blockNumber = await getBlockNumber()
+                    const daiSupply = await getDaiTotalSupply()
+
+                    document.getElementById("wallet-address").innerHTML = `Wallet address: ${address}`
+                    document.getElementById("block-number").innerHTML = `Block number: ${blockNumber}`
+                    document.getElementById("dai-supply").innerHTML = `DAI total supply: ${daiSupply}`
+                }
+            }
+
+            window.ethereum.on('accountsChanged', () => {
+                setup()
+            })
+        </script>
+    </head>
+
+    <body onload='setup()'>
+        <h1>Metamask wallet test</h1>
+
+        <div id="not-connected">
+            <p>Metamask not connected!</p>
+            <button onclick="connectWallet()">Connect Wallet</button>
+        </div>
+
+        <div id="connected">
+            <p>Metamask is connected!</p>
+            <p id="wallet-address">Wallet address: </p>
+            <p id="block-number">Block number: </p>
+            <p id="dai-supply">DAI total supply: </p>
+        </div>
+    </body>
+</html>
